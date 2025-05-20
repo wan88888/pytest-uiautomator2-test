@@ -7,7 +7,9 @@ A pytest-based automation testing framework for Android applications using uiaut
 - Page Object Model (POM) architecture
 - Parallel test execution on multiple Android devices
 - YAML configuration for devices and test credentials
-- HTML test reports
+- Combined HTML test reports with accurate test durations
+- Error handling with retry mechanism
+- Automatic screenshots on test failures
 - Easy to extend and maintain
 
 ## Prerequisites
@@ -15,7 +17,7 @@ A pytest-based automation testing framework for Android applications using uiaut
 - Python 3.6+
 - Android devices or emulators with Developer Options enabled
 - Android Debug Bridge (ADB) installed and configured
-- SauceLabs Sample App installed on the test devices
+- Swag Labs Sample App installed on the test devices
 
 ## Installation
 
@@ -43,16 +45,16 @@ Edit `config/devices.yaml` to configure your Android devices:
 ```yaml
 devices:
   - id: "device1"
-    serial: "emulator-5554"  # Device serial number (from adb devices)
-    platform_version: "12"
-    app_package: "com.saucelabs.mydemoapp.android"
-    app_activity: ".MainActivity"
+    serial: "R9WR10F2QQJ"  # Device serial number (from adb devices)
+    platform_version: "11"
+    app_package: "com.swaglabsmobileapp"
+    app_activity: "com.swaglabsmobileapp.MainActivity"
     
   - id: "device2"
-    serial: "emulator-5556"
-    platform_version: "11"
-    app_package: "com.saucelabs.mydemoapp.android"
-    app_activity: ".MainActivity"
+    serial: "ZL5227R9TD"
+    platform_version: "10"
+    app_package: "com.swaglabsmobileapp"
+    app_activity: "com.swaglabsmobileapp.MainActivity"
 ```
 
 ### Credentials Configuration
@@ -62,8 +64,8 @@ Edit `config/credentials.yaml` to configure the test accounts:
 ```yaml
 accounts:
   valid_user:
-    username: "bob@example.com"
-    password: "10203040"
+    username: "standard_user"
+    password: "secret_sauce"
   invalid_user:
     username: "invalid@example.com"
     password: "wrongpassword"
@@ -76,6 +78,11 @@ accounts:
 ```
 python run_parallel_tests.py
 ```
+
+This command will:
+1. Run tests in parallel on all devices configured in devices.yaml
+2. Generate a combined HTML report with results from all devices
+3. The report will show test durations, outcomes, and other details
 
 ### Run Tests on a Specific Device
 
@@ -91,11 +98,10 @@ pytest tests/test_login.py::TestLogin::test_successful_login --device-id=device1
 
 ### Test Reports
 
-HTML test reports are automatically generated in the `reports` directory. Each report file is named with the device ID and timestamp to avoid conflicts when running tests in parallel:
+A combined HTML test report is automatically generated in the `reports` directory when running tests in parallel. The report includes results from all devices, with test durations, pass/fail status, and summary statistics.
 
 ```
-reports/report_device1_YYYYMMDD_HHMMSS.html
-reports/report_device2_YYYYMMDD_HHMMSS.html
+reports/combined_report_YYYYMMDD_HHMMSS.html
 ```
 
 To generate a test report when running a test manually:
@@ -115,12 +121,16 @@ pytest tests/test_login.py --device-id=device1 -v --html=reports/report.html --s
 │   ├── home_page.py          # Home page implementation
 │   └── login_page.py         # Login page implementation
 ├── reports/                  # Test reports directory
+├── screenshots/              # Screenshots taken on test failures
+├── temp/                     # Temporary test result files
 ├── tests/                    # Test cases
 │   └── test_login.py         # Login test cases
 ├── utils/                    # Utility modules
 │   ├── device_manager.py     # Device management utilities
+│   ├── logger.py             # Logging configuration
+│   ├── screenshot_util.py    # Screenshot utilities
 │   └── yaml_utils.py         # YAML loading utilities
-├── conftest.py               # pytest configuration
+├── conftest.py               # pytest configuration and fixtures
 ├── requirements.txt          # Python dependencies
 └── run_parallel_tests.py     # Script to run tests in parallel
 ```
@@ -142,6 +152,7 @@ pytest tests/test_login.py --device-id=device1 -v --html=reports/report.html --s
 ## Troubleshooting
 
 - Ensure ADB can detect your devices using `adb devices`
-- Make sure the SauceLabs Sample App is installed on your devices
+- Make sure the Swag Labs Sample App is installed on your devices
 - Check device serial numbers in `config/devices.yaml` match the output of `adb devices`
-- Verify the application package and activity names are correct 
+- Verify the application package and activity names are correct
+- If test durations show as 0.00 in reports, ensure you're using pytest-json-report 

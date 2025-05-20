@@ -17,6 +17,10 @@ ENV/
 .pytest_cache/
 reports/
 
+# Project specific
+screenshots/
+temp/
+
 # IDE
 .idea/
 .vscode/
