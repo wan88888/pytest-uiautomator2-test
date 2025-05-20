@@ -1,0 +1,18 @@
+devices:
+  - id: "device1"
+    serial: "R9WR10F2QQJ"
+    platform_version: "11"
+    app_package: "com.swaglabsmobileapp"
+    app_activity: "com.swaglabsmobileapp.MainActivity"
+    
+  - id: "device2"
+    serial: "ZL5227R9TD"
+    platform_version: "10"
+    app_package: "com.swaglabsmobileapp"
+    app_activity: "com.swaglabsmobileapp.MainActivity"
+
+  - id: "device3"
+    serial: "emulator-5554"
+    platform_version: "11"
+    app_package: "com.swaglabsmobileapp"
+    app_activity: "com.swaglabsmobileapp.MainActivity"
